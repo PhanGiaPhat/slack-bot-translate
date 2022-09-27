@@ -1,0 +1,25 @@
+{
+  "name": "slack-bot-translate",
+  "version": "1.0.0",
+  "description": "A simple Slackbot translate all messages sent to channel",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhanGiaPhat/slack-bot-translate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PhanGiaPhat/slack-bot-translate/issues"
+  },
+  "homepage": "https://github.com/PhanGiaPhat/slack-bot-translate#readme",
+  "dependencies": {
+    "@slack/bolt": "^3.12.1",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.2",
+    "slackbots": "^1.2.0"
+  }
+}
