@@ -1,36 +1,40 @@
 const { App } = require("@slack/bolt");
 
+const translate = require('@vitalets/google-translate-api');
 
+require("dotenv").config();
+// Initializes your app with your bot token and signing secret
 const app = new App({
-    token: "xoxb-810419405043-4124002799878-955spagPL9SZZxxPtECezCmZ", //Find in the Oauth  & Permissions tab
-    signingSecret: "ea5ce3685a280fbcb5bd4591a64bf237", // Find in Basic Information Tab
-    socketMode:true,
-    appToken: "xapp-1-A043UJ51FB4-4140271409252-042a8e7a0bbb1908c12c0bcc9e24fde811d0df9cf85a19c604b4e654b5243e72" // Token from the App-level Token that we created
-});
+    token: process.env.SLACK_BOT_TOKEN,
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    socketMode:true, // enable the following to use socket mode
+    appToken: process.env.SLACK_APP_TOKEN
+  });
 
-app.command("/square", async ({ command, ack, say }) => {
-try {
-    await ack();
-    let txt = command.text // The inputted parameters
-    if(isNaN(txt)) {
-        say(txt + " is not a number")
-    } else {
-        say(txt + " squared = " + (parseFloat(txt) * parseFloat(txt)))
+// Listener middleware that filters out messages with 'bot_message' subtype
+    async function noBotMessages({ message, next }) {
+        if (!message.subtype || message.subtype !== 'bot_message') {
+        await next();
+        }
     }
-} catch (error) {
-    console.log("err")
-    console.error(error);
-}
-});
 
-app.message("hello", async ({ command, say }) => { // Replace hello with the message
+  // The listener only receives messages from humans
+  app.message(noBotMessages, async ({ client, logger, message }) => {
     try {
-    say("Hi! Thanks for PM'ing me!");
-    } catch (error) {
-        console.log("err")
-    console.error(error);
-    }
-});
+        client.chat.postMessage({
+            channel: message.channel,
+            text: (await translate(message.text, {to: 'en'})).text,
+            as_user: true,
+        })
+      }
+      catch (error) {
+        logger.error(error);
+      }
+  });
 
-
-app.start(3000)
+(async () => {
+  const port = 3000
+  // Start your app
+  await app.start(process.env.PORT || port);
+  console.log(`⚡️ Slack Bolt app is running on port ${port}!`);
+})();
