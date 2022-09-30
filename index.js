@@ -9,13 +9,11 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     socketMode:true, // enable the following to use socket mode
     appToken: process.env.SLACK_APP_TOKEN,
-    lang: 'en'
   });
 
 // Listener middleware that filters out messages with 'bot_message' subtype
     async function noBotMessages({ message, next }) {
-        console.log(message.subtype)
-        if (!message.subtype || message.subtype !== "") {
+        if (!message.bot_profile) {
         await next();
         }
     }
@@ -26,7 +24,7 @@ const app = new App({
     try {
         client.chat.postMessage({
             channel: message.channel,
-            text: (await translate(message.text, {to: app.lang})).text,
+            text: (await translate(message.text, {to: 'ja'})).text,
             thread_ts: message.ts
         })
       }
