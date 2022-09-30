@@ -14,7 +14,10 @@ const app = new App({
 // Listener middleware that filters out messages with 'bot_message' subtype
     async function noBotMessages({ message, next }) {
         if (!message.bot_profile) {
-        await next();
+            // const text = message.text
+            // const test = text.replace(/ *\:[^)]*\: */g, "")
+            // console.log(test)
+            await next();
         }
     }
 
@@ -24,9 +27,10 @@ const app = new App({
     try {
         client.chat.postMessage({
             channel: message.channel,
-            text: (await translate(message.text, {to: 'ja'})).text,
+            text: (await translate(message.text.replace(/\@.*$/, ""), {to: 'ja'})).text,
             thread_ts: message.ts
         })
+        //.replace(/ *\:[^)]*\: */g, "")
       }
       catch (error) {
         logger.error(error);
