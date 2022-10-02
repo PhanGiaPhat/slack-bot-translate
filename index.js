@@ -221,11 +221,20 @@ app.message(noBotMessages, async ({ client, logger, message }) => {
       var texts = await Promise.all(records.language.map(async ({key}) => {
         return (await translate(message.text, {to: key})).text;
       }))
+
+      const userInfo = await client.users.info({
+        token: process.env.SLACK_BOT_TOKEN,
+        user: message.user
+      });
+
       client.chat.postMessage({
           channel: message.channel,
           text: texts.join('\n'),
-          thread_ts: message.ts
+          thread_ts: message.ts,
+          icon_url: userInfo.user.profile.image_original
       })
+
+      
     }
     catch (error) {
       logger.error(error);
