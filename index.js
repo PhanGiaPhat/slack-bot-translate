@@ -219,7 +219,7 @@ app.message(noBotMessages, async ({ client, logger, message }) => {
       const records = await Record.findOne({channel : message.channel});
 
       var texts = await Promise.all(records.language.map(async ({key}) => {
-        return (await translate(message.text, {to: key})).text;
+        return (await translate(message.text.replace(/\:.*:|\@.*\s/, ""), {to: key})).text;
       }))
 
       const userInfo = await client.users.info({
