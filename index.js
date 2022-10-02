@@ -37,6 +37,159 @@ var recordSchema = mongoose.Schema({
 
 const Record = mongoose.model('record', recordSchema, 'record');
 
+var langs = {
+  'auto': 'Automatic',
+  'af': 'Afrikaans',
+  'sq': 'Albanian',
+  'am': 'Amharic',
+  'ar': 'Arabic',
+  'hy': 'Armenian',
+  'az': 'Azerbaijani',
+  'eu': 'Basque',
+  'be': 'Belarusian',
+  'bn': 'Bengali',
+  'bs': 'Bosnian',
+  'bg': 'Bulgarian',
+  'ca': 'Catalan',
+  'ceb': 'Cebuano',
+  'ny': 'Chichewa',
+  'zh-CN': 'Chinese (Simplified)',
+  'zh-TW': 'Chinese (Traditional)',
+  'co': 'Corsican',
+  'hr': 'Croatian',
+  'cs': 'Czech',
+  'da': 'Danish',
+  'nl': 'Dutch',
+  'en': 'English',
+  'eo': 'Esperanto',
+  'et': 'Estonian',
+  'tl': 'Filipino',
+  'fi': 'Finnish',
+  'fr': 'French',
+  'fy': 'Frisian',
+  'gl': 'Galician',
+  'ka': 'Georgian',
+  'de': 'German',
+  'el': 'Greek',
+  'gu': 'Gujarati',
+  'ht': 'Haitian Creole',
+  'ha': 'Hausa',
+  'haw': 'Hawaiian',
+  'he': 'Hebrew',
+  'iw': 'Hebrew',
+  'hi': 'Hindi',
+  'hmn': 'Hmong',
+  'hu': 'Hungarian',
+  'is': 'Icelandic',
+  'ig': 'Igbo',
+  'id': 'Indonesian',
+  'ga': 'Irish',
+  'it': 'Italian',
+  'ja': 'Japanese',
+  'jw': 'Javanese',
+  'kn': 'Kannada',
+  'kk': 'Kazakh',
+  'km': 'Khmer',
+  'ko': 'Korean',
+  'ku': 'Kurdish (Kurmanji)',
+  'ky': 'Kyrgyz',
+  'lo': 'Lao',
+  'la': 'Latin',
+  'lv': 'Latvian',
+  'lt': 'Lithuanian',
+  'lb': 'Luxembourgish',
+  'mk': 'Macedonian',
+  'mg': 'Malagasy',
+  'ms': 'Malay',
+  'ml': 'Malayalam',
+  'mt': 'Maltese',
+  'mi': 'Maori',
+  'mr': 'Marathi',
+  'mn': 'Mongolian',
+  'my': 'Myanmar (Burmese)',
+  'ne': 'Nepali',
+  'no': 'Norwegian',
+  'ps': 'Pashto',
+  'fa': 'Persian',
+  'pl': 'Polish',
+  'pt': 'Portuguese',
+  'pa': 'Punjabi',
+  'ro': 'Romanian',
+  'ru': 'Russian',
+  'sm': 'Samoan',
+  'gd': 'Scots Gaelic',
+  'sr': 'Serbian',
+  'st': 'Sesotho',
+  'sn': 'Shona',
+  'sd': 'Sindhi',
+  'si': 'Sinhala',
+  'sk': 'Slovak',
+  'sl': 'Slovenian',
+  'so': 'Somali',
+  'es': 'Spanish',
+  'su': 'Sundanese',
+  'sw': 'Swahili',
+  'sv': 'Swedish',
+  'tg': 'Tajik',
+  'ta': 'Tamil',
+  'te': 'Telugu',
+  'th': 'Thai',
+  'tr': 'Turkish',
+  'uk': 'Ukrainian',
+  'ur': 'Urdu',
+  'uz': 'Uzbek',
+  'vi': 'Vietnamese',
+  'cy': 'Welsh',
+  'xh': 'Xhosa',
+  'yi': 'Yiddish',
+  'yo': 'Yoruba',
+  'zu': 'Zulu'
+};
+
+function langToShow(langs) {
+  var result = "";
+  for (var key in langs) {
+    if (!langs.hasOwnProperty(key)) continue;
+
+    result += key+" <= "+langs[key]+"\n";
+  }
+  return result;
+}
+/**
+* Returns the ISO 639-1 code of the desiredLang – if it is supported by Google Translate
+* @param {string} desiredLang – the name or the code(case sensitive) of the desired language
+* @returns {string|boolean} The ISO 639-1 code of the language or false if the language is not supported
+*/
+function getCode(desiredLang) {
+  if (!desiredLang) {
+      return false;
+  }
+
+  if (langs[desiredLang]) {
+      return desiredLang;
+  }
+
+  var keys = Object.keys(langs).filter(function (key) {
+      if (typeof langs[key] !== 'string') {
+          return false;
+      }
+
+      return langs[key].toLowerCase() === desiredLang.toLowerCase();
+  });
+
+  return keys[0] || false;
+}
+
+/**
+* Returns true if the desiredLang is supported by Google Translate and false otherwise
+* @param desiredLang – the ISO 639-1 code or the name of the desired language
+* @returns {boolean}
+*/
+function isSupported(desiredLang) {
+  return Boolean(getCode(desiredLang));
+}
+
+
 require("dotenv").config();
 
 const app = new App({
@@ -139,24 +292,42 @@ app.command("/byebot", async ({
   });
 });
 
+app.command("/findlang", async({
+  command,
+  ack
+}) => {
+  await ack()
+  await app.client.chat.postMessage({
+    channel: command.channel_id,
+    text : "```\n" + langToShow(langs) + "\n```",
+  })
+});
+
 app.command("/addlang", async ({
   command,
   ack
 }) => {
   await ack()
-  Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $push: { language : {key : ""+command.text} } },
-  function(err) {
-    if (err) {
-      console.log(err)
-    }
-  });
+  if (isSupported(command.text)){
+    Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $push: { language : {key : ""+command.text} } },
+    function(err) {
+      if (err) {
+        console.log(err)
+      }
+    });
 
-  const records = await Record.findOne({channel : command.channel_id});
+    const records = await Record.findOne({channel : command.channel_id});
 
-  await app.client.chat.postMessage({
+    await app.client.chat.postMessage({
+        channel: command.channel_id,
+        text: "Added language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
+    })
+  } else {
+    await app.client.chat.postMessage({
       channel: command.channel_id,
-      text: "Added language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
-  })
+      text: "Not support this language, please use /findlang to find the correct code !!!",
+    })
+  }
 });
 
 app.command("/byelang", async ({
@@ -164,19 +335,27 @@ app.command("/byelang", async ({
   ack
 }) => {
   await ack()
-  Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $pull: { language : {key : ""+command.text} } },
-  function(err) {
-    if (err) {
-      console.log(err)
-    }
-  });
 
-  const records = await Record.findOne({channel : command.channel_id});
+  if (isSupported(command.text)){
+    Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $pull: { language : {key : ""+command.text} } },
+    function(err) {
+      if (err) {
+        console.log(err)
+      }
+    });
 
-  await app.client.chat.postMessage({
+    const records = await Record.findOne({channel : command.channel_id})
+    
+    await app.client.chat.postMessage({
       channel: command.channel_id,
-      text: "Removed language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
-  })
+      text: "Removed language: "+command.text+"\n"+"Language list: "+ getLangList(records.language),
+    })
+  } else {
+    await app.client.chat.postMessage({
+      channel: command.channel_id,
+      text: "Not support this language, please use /findlang to find the correct code !!!",
+    })
+  }
 });
 
   
