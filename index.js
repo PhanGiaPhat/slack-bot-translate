@@ -2,94 +2,198 @@ const { App } = require("@slack/bolt");
 
 const translate = require('@vitalets/google-translate-api');
 
-require("dotenv").config();
-// Initializes your app with your bot token and signing secret
-const app = new App({
-    token: process.env.SLACK_BOT_TOKEN,
-    signingSecret: process.env.SLACK_SIGNING_SECRET,
-    socketMode:true, // enable the following to use socket mode
-    appToken: process.env.SLACK_APP_TOKEN,
-  });
+let mongoose = require('mongoose');
 
-// Listener middleware that filters out messages with 'bot_message' subtype
-    async function noBotMessages({ message, next }) {
-        if (!message.bot_profile) {
-            // const text = message.text
-            // const test = text.replace(/ *\:[^)]*\: */g, "")
-            // console.log(test)
-            await next();
-        }
+const mongodb_url = 'mongodb+srv://transwitcher:0Dwb5VAUiuirxvj5@cluster0.iirfnkv.mongodb.net/?retryWrites=true&w=majority'
+
+class Database {
+    constructor() {
+        this._connect()
     }
 
-  // The listener only receives messages from humans
+    _connect() {
+        mongoose.connect(mongodb_url, {useNewUrlParser: true})
+            .then(() => {
+                console.log("Database connection successfully!");
+            })
+            .catch(err => {
+                console.log("Database connection error!");
+            })
+    }
+}
 
-  app.message(noBotMessages, async ({ client, logger, message }) => {
-    try {
-        client.chat.postMessage({
-            channel: message.channel,
-            text: (await translate(message.text.replace(/\@.*$/, ""), {to: 'ja'})).text,
-            thread_ts: message.ts
-        })
-        //.replace(/ *\:[^)]*\: */g, "")
-      }
-      catch (error) {
-        logger.error(error);
-      }
+const Databse = new Database();
+
+var recordSchema = mongoose.Schema({
+    channel: {
+        type: String,
+        default: ''
+    },
+    language: {
+        type: Array,
+        default: ''
+    }
+});
+
+const Record = mongoose.model('record', recordSchema, 'record');
+
+require("dotenv").config();
+
+const app = new App({
+  token: process.env.SLACK_BOT_TOKEN,
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  socketMode:true,
+  appToken: process.env.SLACK_APP_TOKEN,
+});
+
+async function noBotMessages({ message, next }) {
+    if (!message.bot_profile) {
+        await next();
+    }
+}
+  
+var getLangList = function(arrLang) {
+  var result = "";
+  arrLang.map(async ({key}) => {
+    result += key+" ";
+  })
+  return result;
+}
+
+app.message(noBotMessages, async ({ client, logger, message }) => {
+  try {
+
+      const records = await Record.findOne({channel : message.channel});
+
+      var texts = await Promise.all(records.language.map(async ({key}) => {
+        return (await translate(message.text, {to: key})).text;
+      }))
+      client.chat.postMessage({
+          channel: message.channel,
+          text: texts.join('\n'),
+          thread_ts: message.ts
+      })
+    }
+    catch (error) {
+      logger.error(error);
+    }
+});
+
+app.command("/heybot", async ({
+  command,
+  ack
+}) => {
+  await ack()
+  Record.countDocuments({channel: command.channel_id}, function (err, count){ 
+    if(count>0){
+      app.client.chat.postMessage({
+        channel: command.channel_id,
+        text: "Exist !!!",
+      })
+    } else {
+      let newRecord = new Record({
+        channel: command.channel_id,
+        language: [
+          {
+            key: "en"
+          }
+        ]
+      });
+      newRecord.save()
+        .then()
+        .catch()
+      app.client.conversations.join({
+          token: process.env.SLACK_BOT_TOKEN,
+          channel: command.channel_id, 
+      });
+      app.client.chat.postMessage({
+          channel: command.channel_id,
+          text: "I'm here to help you translate your messages",
+      })
+    }
+  }); 
+});
+
+app.command("/byebot", async ({
+  command,
+  ack
+}) => {
+  await ack()
+  Record.countDocuments({channel: command.channel_id}, function (err, count){ 
+    if(count>0){
+      Record.deleteMany({ channel: { $in: command.channel_id}}, function(err) {})
+      app.client.chat.postMessage({
+          channel: command.channel_id,
+          text: "See you! I'm left",
+      })
+      app.client.conversations.leave({
+          token: process.env.SLACK_BOT_TOKEN,
+          channel: command.channel_id,
+      });
+    } else {
+      app.client.chat.postMessage({
+        channel: command.channel_id,
+        text: "Not in channel to leave !!!",
+      })
+    }
+  });
+});
+
+app.command("/addlang", async ({
+  command,
+  ack
+}) => {
+  await ack()
+  Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $push: { language : {key : ""+command.text} } },
+  function(err) {
+    if (err) {
+      console.log(err)
+    }
   });
 
-  app.command("/heybot", async ({
-    command,
-    ack
-  }) => {
-    await ack()
-    await app.client.conversations.join({
-        token: process.env.SLACK_BOT_TOKEN,
-        channel: command.channel_id, 
-    });
-    app.client.chat.postMessage({
-        channel: command.channel_id,
-        text: "I'm here to help you translate your messages",
-    })
+  const records = await Record.findOne({channel : command.channel_id});
+
+  await app.client.chat.postMessage({
+      channel: command.channel_id,
+      text: "Added language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
+  })
+});
+
+app.command("/byelang", async ({
+  command,
+  ack
+}) => {
+  await ack()
+  Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $pull: { language : {key : ""+command.text} } },
+  function(err) {
+    if (err) {
+      console.log(err)
+    }
   });
 
-  app.command("/byebot", async ({
-    command,
-    ack
-  }) => {
-    app.client.chat.postMessage({
-        channel: command.channel_id,
-        text: "See you! I'm left",
-    })
-    await ack()
-    await app.client.conversations.leave({
-        token: process.env.SLACK_BOT_TOKEN,
-        channel: command.channel_id,
-    });
-  });
+  const records = await Record.findOne({channel : command.channel_id});
 
-  app.command("/addlang", async ({
-    command,
-    ack
-  }) => {
-    app.lang = `${command.text}`
-    await ack()
-    await app.client.chat.postMessage({
-        channel: command.channel_id,
-        text: "Trasnlate to "+app.lang,
-    })
-  });
+  await app.client.chat.postMessage({
+      channel: command.channel_id,
+      text: "Removed language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
+  })
+});
 
-  app.command("/byelang", async ({
-    command,
-    ack
-  }) => {
-    app.lang = 'en'
-    await ack()
-    await app.client.chat.postMessage({
-        channel: command.channel_id,
-        text: "Trasnlate to en",
-    })
-  });
+  
+
+app.command("/listlang", async ({
+  command,
+  ack
+}) => {
+  await ack()
+
+  const records = await Record.findOne({channel : command.channel_id});
+
+  await app.client.chat.postMessage({
+      channel: command.channel_id,
+      text: "Language list: "+getLangList(records.language),
+  })
+});
 
 (async () => {
   const port = 3000
