@@ -230,8 +230,8 @@ app.message(noBotMessages, async ({ client, logger, message }) => {
       client.chat.postMessage({
           channel: message.channel,
           text: texts.join('\n'),
-          thread_ts: message.ts,
-          icon_url: userInfo.user.profile.image_original
+          username: userInfo.user.profile.display_name,
+          icon_url: userInfo.user.profile.image_original,
       })
 
       
