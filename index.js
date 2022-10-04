@@ -7,7 +7,6 @@ let mongoose = require('mongoose');
 require("dotenv").config();
 
 const mongodb_url = process.env.MONGODB_URL;
-console.log(mongodb_url);
 
 class Database {
     constructor() {
