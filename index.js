@@ -244,7 +244,7 @@ app.message(noBotMessages, async ({ client, message}) => {
     user: message.user
   });
 
-  client.chat.postMessage({
+  await client.chat.postMessage({
       channel: message.channel,
       text: textToResponse,
       username: userInfo.user.profile.display_name,
@@ -261,7 +261,11 @@ app.command("/heybot", async ({
     if(count>0){
       app.client.chat.postMessage({
         channel: command.channel_id,
-        text: "Exist !!!",
+        text: "Here's your all",
+          attachments: [{
+            "color": "#33ccee",
+            "text" : "I'm exist !!!",
+          }]
       })
     } else {
       let newRecord = new Record({
@@ -281,7 +285,11 @@ app.command("/heybot", async ({
       });
       app.client.chat.postMessage({
           channel: command.channel_id,
-          text: "I'm here to help you translate your messages",
+          text: "Here's your all",
+          attachments: [{
+            "color": "#33ccee",
+            "text" : "I'm here to help you translate your messages",
+          }]
       })
     }
   }); 
@@ -297,7 +305,11 @@ app.command("/byebot", async ({
       Record.deleteMany({ channel: { $in: command.channel_id}}, function(err) {})
       app.client.chat.postMessage({
           channel: command.channel_id,
-          text: "See you! I'm left",
+          text: "Here's your all",
+          attachments: [{
+            "color": "#33ccee",
+            "text" : "See you! I'm left",
+          }]
       })
       app.client.conversations.leave({
           token: process.env.SLACK_BOT_TOKEN,
@@ -306,7 +318,11 @@ app.command("/byebot", async ({
     } else {
       app.client.chat.postMessage({
         channel: command.channel_id,
-        text: "Not in channel to leave !!!",
+        text: "Here's your all",
+        attachments: [{
+          "color": "#33ccee",
+          "text" : "Not in channel to leave !!!",
+        }]
       })
     }
   });
@@ -319,7 +335,11 @@ app.command("/findlang", async({
   await ack()
   await app.client.chat.postMessage({
     channel: command.channel_id,
-    text : "```\n" + langToShow(langs) + "\n```",
+    text: "Here's your all",
+    attachments: [{
+      "color": "#33ccee",
+      "text" : "```\n" + langToShow(langs) + "\n```",
+    }]
   })
 });
 
@@ -338,14 +358,22 @@ app.command("/addlang", async ({
 
     const records = await Record.findOne({channel : command.channel_id});
 
-    await app.client.chat.postMessage({
+    app.client.chat.postMessage({
         channel: command.channel_id,
-        text: "Added language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
+        text: "Here's your all",
+        attachments: [{
+          "color": "#33ccee",
+          "text" : "Added language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
+        }]
     })
   } else {
-    await app.client.chat.postMessage({
+    app.client.chat.postMessage({
       channel: command.channel_id,
-      text: "Not support this language, please use /findlang to find the correct code !!!",
+      text: "Here's your all",
+      attachments: [{
+        "color": "#33ccee",
+        "text" : "Not support this language, please use /findlang to find the correct code !!!",
+      }]
     })
   }
 });
@@ -366,14 +394,22 @@ app.command("/byelang", async ({
 
     const records = await Record.findOne({channel : command.channel_id})
     
-    await app.client.chat.postMessage({
+    app.client.chat.postMessage({
       channel: command.channel_id,
-      text: "Removed language: "+command.text+"\n"+"Language list: "+ getLangList(records.language),
+      text: "Here's your all",
+      attachments: [{
+        "color": "#33ccee",
+        "text" : "Removed language: "+command.text+"\n"+"Language list: "+ getLangList(records.language),
+      }]
     })
   } else {
-    await app.client.chat.postMessage({
+    app.client.chat.postMessage({
       channel: command.channel_id,
-      text: "Not support this language, please use /findlang to find the correct code !!!",
+      text: "Here's your all",
+      attachments: [{
+        "color": "#33ccee",
+        "text" : "Not support this language, please use /findlang to find the correct code !!!",
+      }]
     })
   }
 });
@@ -390,7 +426,11 @@ app.command("/listlang", async ({
 
   await app.client.chat.postMessage({
       channel: command.channel_id,
-      text: "Language list: "+getLangList(records.language),
+      text: "Here's your all",
+      attachments: [{
+        "color": "#33ccee",
+        "text" : "Language list: "+getLangList(records.language),
+      }]
   })
 });
 
