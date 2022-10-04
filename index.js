@@ -6,7 +6,7 @@ let mongoose = require('mongoose');
 
 require("dotenv").config();
 
-const mongodb_url = process.env.MONGODB_URL;
+const mongodb_url = "mongodb://mongodb:27017/test";
 
 class Database {
     constructor() {
@@ -204,52 +204,22 @@ var getLangList = function(arrLang) {
   return result;
 }
 
-app.message(noBotMessages, async ({ client, message}) => {
-
-  const getMessagePromise = new Promise((resolve, reject) => {
-    let resultText = "";
-    resultText = message.text;
-    if (resultText != "") resolve(resultText);
-    reject("Not been gotten")
-  })
-
-  const messageGotten = await getMessagePromise;
-
-  const replacePromise = new Promise((resolve, reject) => {
-    let resultText = "";
-    resultText = messageGotten.replace(/:\S*:|<\S*>/gim, "");
-    if (resultText != "") resolve(resultText);
-    reject("Not been replaced")
-  })
-
-  const textToTranslate = await replacePromise;
-
-  const records = await Record.findOne({channel : message.channel});
-
-  let texts = await Promise.all(records.language.map(async ({key}) => {
-    return (await translate(textToTranslate, {to: key})).text;
-  }))
-
-  const joinPromise = new Promise((resolve, reject) => {
-    let resultText = "";
-    resultText = texts.join('\n');
-    if (resultText != "") resolve(resultText);
-    reject("Not been joined")
-  });
-
-  const textToResponse = await joinPromise;
-
+app.message(noBotMessages, async ({ client, message }) => {
+  const clientText  = message.text.replace(/:\S*:|<\S*>/gim, "") || "";
+  const records = await Record.findOne({ channel: message?.channel });
+  const translatedTexts = await Promise.all(records.language?.map(async ({ key }) => {
+    return (await translate(clientText, { to: key }))?.text;
+  }));
+  const responseText = translatedTexts?.join("\n");
   const userInfo = await client.users.info({
     token: process.env.SLACK_BOT_TOKEN,
     user: message.user
-  });
-
+  })
   await client.chat.postMessage({
-      channel: message.channel,
-      text: textToResponse,
-      username: userInfo.user.profile.display_name,
+    channel: message.channel,
+    text: responseText,
+    username: userInfo?.user?.profile?.display_name
   });
-
 });
 
 app.command("/heybot", async ({
