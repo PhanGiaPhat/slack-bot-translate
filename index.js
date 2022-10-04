@@ -4,7 +4,10 @@ const translate = require('@vitalets/google-translate-api');
 
 let mongoose = require('mongoose');
 
+require("dotenv").config();
+
 const mongodb_url = process.env.MONGODB_URL;
+console.log(mongodb_url);
 
 class Database {
     constructor() {
@@ -190,7 +193,7 @@ function isSupported(desiredLang) {
 }
 
 
-require("dotenv").config();
+
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
