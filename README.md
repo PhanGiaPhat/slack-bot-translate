@@ -22,6 +22,7 @@ npm install
   - `SLACK_BOT_TOKEN`
   - `SLACK_SIGNING_SECRET`
   - `SLACK_APP_TOKEN`
+  - `MONGODB_URL`
 
 #### Add the bot to the Slack Workspace:
 - enable Slash Commands (see [minute 6 of this tutorial](https://medium.com/slack-developer-blog/build-a-serverless-slack-bot-in-9-minutes-with-node-js-and-stdlib-b993cfa15358))
@@ -59,7 +60,7 @@ npm install
 
 
 #### Add MongoDB URL in index.js file
-- find `mongodb_url` variable in index.js file and replace with your `username` and `password`
+- modify `MONGODB_URL` variable with your MongoDB URL and replace with your `username` and `password`
 
 
 #### Test it out

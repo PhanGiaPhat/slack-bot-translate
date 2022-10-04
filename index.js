@@ -4,7 +4,7 @@ const translate = require('@vitalets/google-translate-api');
 
 let mongoose = require('mongoose');
 
-const mongodb_url = 'mongodb+srv://transwitcher:0Dwb5VAUiuirxvj5@cluster0.iirfnkv.mongodb.net/?retryWrites=true&w=majority'
+const mongodb_url = process.env.MONGODB_URL;
 
 class Database {
     constructor() {
