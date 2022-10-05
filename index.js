@@ -190,6 +190,26 @@ const app = new App({
   appToken: process.env.SLACK_APP_TOKEN,
 });
 
+const messageSubType = [
+  'bot_message',
+  'me_message',
+  'message_changed',
+  'message_deleted',
+  'message_replied',
+  'thread_broadcast',
+  'channel_join',
+  'channel_leave',
+  'channel_topic',
+  'channel_purpose',
+  'channel_name',
+  'channel_archive',
+  'channel_unarchive',
+  'file_share',
+  'ekm_access_denied',
+  'channel_posting_permissions',
+  'sh_room_created'
+];
+
 async function noBotMessages({ message, next }) {
     if (!message.bot_profile) {
         await next();
