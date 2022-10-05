@@ -98,20 +98,22 @@ Slackbot monitors messages sent to the channel and automatically translates into
 
 This section should list any major frameworks/libraries used to bootstrap my project. Leave any add-ons/plugins for the acknowledgements section. Here are a few stacks.
 
-<table>
-  <tr>
-    <td halign="center" valign="middle"><img src="docs/nodejs.png" alt="nodejs" width="300" height="auto"></td>
-    <td halign="center" valign="middle"><img src="docs/slackapi.png" alt="slackapi" width="300" height="auto"></td>
-  </tr>
-  <tr>
-    <td halign="center" valign="middle"><img src="docs/googletranslate.jpg" alt="googletranslate" width="300" height="auto"></td>
-    <td halign="center" valign="middle"><img src="docs/mongodb.png" alt="mongodb" width="300" height="auto"></td>
-  </tr>
-  <tr>
-    <td halign="center" valign="middle"><img src="docs/docker.png" alt="docker" width="300" height="auto"></td>
-    <td halign="center" valign="middle"><img src="docs/shell.png" alt="shell" width="300" height="auto"></td>
-  </tr>
-</table>
+<div align="center">
+  <table style="display: block; margin: 0 auto">
+    <tr>
+      <td halign="center" valign="middle"><img src="docs/nodejs.png" alt="nodejs" width="300" height="auto"></td>
+      <td halign="center" valign="middle"><img src="docs/slackapi.png" alt="slackapi" width="300" height="auto"></td>
+    </tr>
+    <tr>
+      <td halign="center" valign="middle"><img src="docs/googletranslate.jpg" alt="googletranslate" width="300" height="auto"></td>
+      <td halign="center" valign="middle"><img src="docs/mongodb.png" alt="mongodb" width="300" height="auto"></td>
+    </tr>
+    <tr>
+      <td halign="center" valign="middle"><img src="docs/docker.png" alt="docker" width="300" height="auto"></td>
+      <td halign="center" valign="middle"><img src="docs/shell.png" alt="shell" width="300" height="auto"></td>
+    </tr>
+  </table>
+</div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
