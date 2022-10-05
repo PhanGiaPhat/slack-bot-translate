@@ -98,20 +98,20 @@ Slackbot monitors messages sent to the channel and automatically translates into
 
 This section should list any major frameworks/libraries used to bootstrap my project. Leave any add-ons/plugins for the acknowledgements section. Here are a few stacks.
 
-<div align="center">
-    <img src="docs/nodejs.png" alt="nodejs" width="50%" height="auto">
-    <img src="docs/slackapi.png" alt="slackapi" width="50%" height="auto">
-</div>
-
-<div align="center">
-    <img src="docs/googletranslate.jpg" alt="googletranslate" width="50%" height="auto">
-    <img src="docs/mongodb.png" alt="mongodb" width="50%" height="auto">
-</div>
-
-<div align="center">
-    <img src="docs/docker.png" alt="docker" width="50%" height="auto">
-    <img src="docs/shell.png" alt="shell" width="50%" height="auto">
-</div>
+<table>
+  <tr>
+    <td valign="top"><img src="docs/nodejs.png" alt="nodejs" width="auto" height="auto"></td>
+    <td valign="top"><img src="docs/slackapi.png" alt="slackapi" width="auto" height="auto"></td>
+  </tr>
+  <tr>
+    <td valign="top"><img src="docs/googletranslate.jpg" alt="googletranslate" width="auto" height="auto"></td>
+    <td valign="top"><img src="docs/mongodb.png" alt="mongodb" width="auto" height="auto"></td>
+  </tr>
+  <tr>
+    <td valign="top"><img src="docs/docker.png" alt="docker" width="auto" height="auto"></td>
+    <td valign="top"><img src="docs/shell.png" alt="shell" width="auto" height="auto"></td>
+  </tr>
+</table>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
