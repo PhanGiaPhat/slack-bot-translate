@@ -54,16 +54,16 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/demo.gif" alt="Logo" width="auto" height="auto">
-<br />
+</div>
 
 ### Introduction To Slack
 There are still a lot of people who have big questions about what the Slack tool is and how to use it. It can be said simply that Slack is a "chat room" for all employees in your company. Slack users can message chat, share documents, images, ... to everyone in the group quickly.
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/slack.jpg" alt="Logo" width="300" height="auto">
-<br />
+</div>
 
 The biggest advantage of Slack is that it can be used on many different platforms such as computers, Android, and iOS, so all employees in the company can use and chat with each other no matter what device they use. Internet connection.
 
@@ -72,9 +72,9 @@ That advantage has attracted many international companies to use Slack and led t
 
 Have you ever been invited to a chat channel where people speak different languages ​​and you have a hard time keeping up with the conversation?
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/question.png" alt="Logo" width="300" height="auto">
-<br />
+</div>
 
 ### Here's Why:
 * For that reason, I have researched and developed a Slack bot application to help automatically translate channel messages into a language of choice.
