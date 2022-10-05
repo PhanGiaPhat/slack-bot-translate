@@ -98,12 +98,20 @@ Slackbot monitors messages sent to the channel and automatically translates into
 
 This section should list any major frameworks/libraries used to bootstrap my project. Leave any add-ons/plugins for the acknowledgements section. Here are a few stacks.
 
-| | |
-|:-------------------------:|:-------------------------:|:-------------------------:|
-|<img width="1604" alt="nodejs" src="docs/nodejs.png">|  <img width="1604" alt="slackapi" src="docs/slackapi.png">|<img width="1604" alt="" src="">|
-|<img width="1604" alt="googletranslate" src="docs/googletranslate.jpg">|  <img width="1604" alt="mongodb" src="docs/mongodb.png">|<img width="1604" alt="" src="">|
-|<img width="1604" alt="docker" src="docs/docker.png">|<img width="1604" alt="shell" src="docs/shell.png">
+<div align="center">
+    <img style="display: block; margin: 0 auto" src="docs/nodejs.png" alt="nodejs" width="50%" height="auto">
+    <img style="display: block; margin: 0 auto" src="docs/slackapi.png" alt="slackapi" width="50%" height="auto">
+</div>
 
+<div align="center">
+    <img style="display: block; margin: 0 auto" src="docs/googletranslate.jpg" alt="googletranslate" width="50%" height="auto">
+    <img style="display: block; margin: 0 auto" src="docs/mongodb.png" alt="mongodb" width="50%" height="auto">
+</div>
+
+<div align="center">
+    <img style="display: block; margin: 0 auto" src="docs/docker.png" alt="docker" width="50%" height="auto">
+    <img style="display: block; margin: 0 auto" src="docs/shell.png" alt="shell" width="50%" height="auto">
+</div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
