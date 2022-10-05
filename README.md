@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/PhanGiaPhat/slack-bot-translate">
-    <img src="docs/Witcher.jpg" alt="Logo" width="300" height="300">
+    <img style="display: block; margin: 0 auto" src="docs/Witcher.jpg" alt="Logo" width="300" height="300">
   </a>
 
   <h3 align="center">Slack Bot Translate</h3>
@@ -23,47 +23,19 @@
   </p>
 </div>
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/demo.gif" alt="Logo" width="auto" height="auto">
-<br />
+</div>
 
 ### Introduction To Slack
 There are still a lot of people who have big questions about what the Slack tool is and how to use it. It can be said simply that Slack is a "chat room" for all employees in your company. Slack users can message chat, share documents, images, ... to everyone in the group quickly.
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/slack.jpg" alt="Logo" width="300" height="auto">
-<br />
+</div>
 
 The biggest advantage of Slack is that it can be used on many different platforms such as computers, Android, and iOS, so all employees in the company can use and chat with each other no matter what device they use. Internet connection.
 
@@ -72,9 +44,9 @@ That advantage has attracted many international companies to use Slack and led t
 
 Have you ever been invited to a chat channel where people speak different languages ​​and you have a hard time keeping up with the conversation?
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/question.png" alt="Logo" width="300" height="auto">
-<br />
+</div>
 
 ### Here's Why:
 * For that reason, I have researched and developed a Slack bot application to help automatically translate channel messages into a language of choice.
@@ -98,12 +70,22 @@ Slackbot monitors messages sent to the channel and automatically translates into
 
 This section should list any major frameworks/libraries used to bootstrap my project. Leave any add-ons/plugins for the acknowledgements section. Here are a few stacks.
 
-| | |
-|:-------------------------:|:-------------------------:|:-------------------------:|
-|<img width="1604" alt="nodejs" src="docs/nodejs.png">|  <img width="1604" alt="slackapi" src="docs/slackapi.png">|<img width="1604" alt="" src="">|
-|<img width="1604" alt="googletranslate" src="docs/googletranslate.jpg">|  <img width="1604" alt="mongodb" src="docs/mongodb.png">|<img width="1604" alt="" src="">|
-|<img width="1604" alt="docker" src="docs/docker.png">|<img width="1604" alt="shell" src="docs/shell.png">
-
+<div align="center">
+  <table style="display: block; margin: 0 auto">
+    <tr>
+      <td halign="center" valign="middle"><img src="docs/nodejs.png" alt="nodejs" width="300" height="auto"></td>
+      <td halign="center" valign="middle"><img src="docs/slackapi.png" alt="slackapi" width="300" height="auto"></td>
+    </tr>
+    <tr>
+      <td halign="center" valign="middle"><img src="docs/googletranslate.jpg" alt="googletranslate" width="300" height="auto"></td>
+      <td halign="center" valign="middle"><img src="docs/mongodb.png" alt="mongodb" width="300" height="auto"></td>
+    </tr>
+    <tr>
+      <td halign="center" valign="middle"><img src="docs/docker.png" alt="docker" width="300" height="auto"></td>
+      <td halign="center" valign="middle"><img src="docs/shell.png" alt="shell" width="300" height="auto"></td>
+    </tr>
+  </table>
+</div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -146,23 +128,25 @@ This is an example of how to list things you need to use the software and how to
 - enable Slash Commands (see [minute 6 of this tutorial](https://medium.com/slack-developer-blog/build-a-serverless-slack-bot-in-9-minutes-with-node-js-and-stdlib-b993cfa15358))
 - modify `SLACK_BOT_TOKEN` from Your Slack App Dashboard -> Install App -> Bot User OAuth Token
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/botToken.jpg" alt="botToken" width="auto" height="auto">
-<br />
+</div>
 
 - modify `SLACK_SIGNING_SECRET` from Your Slack App Dashboard -> Basic information -> App Credentials -> Client Secret
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/singingSecret.png" alt="singingSecret" width="auto" height="auto">
-<br />
+</div>
 
 - modify `SLACK_APP_TOKEN` from Your Slack App Dashboard -> Basic information -> App-Level Tokens -> Tokens
-<br />
+
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/genAuthToken.png" alt="genAuthToken" width="auto" height="auto">
-<br />
-<br />
+</div>
+
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/authToken.png" alt="authToken" width="auto" height="auto">
-<br />
+</div>
 
 #### Add The Bot To The Slack Workspace:
 - Go to your Dashboard -> OAuth & Permissions :
@@ -185,17 +169,17 @@ This is an example of how to list things you need to use the software and how to
     - users.profile:read
     - users:read
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/scope1.png" alt="scope1" width="auto" height="auto">
-<br />
+</div>
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/scope2.png" alt="scope2" width="auto" height="auto">
-<br />
+</div>
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/scope3.png" alt="scope3" width="auto" height="auto">
-<br />
+</div>
 
 - Go to your Dashboard -> Event Subscriptions -> Subscribe to bot events:
     - message.channels
@@ -203,60 +187,60 @@ This is an example of how to list things you need to use the software and how to
     - message.im
     - message.mpim
 
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/events.png" alt="events" width="auto" height="auto">
-<br />
+</div>
 
 
 #### Enable Theses Slash Command
 - type `/heybot [language]` in a slack public channel to invite bot to channel.
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/heybot.png" alt="heybot" width="auto" height="auto">
-<br />
-<br />
+</div>
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/heybotCPL.png" alt="heybotCPL" width="auto" height="auto">
-<br />
+</div>
 - type `/byebot [language]` in a public channel that Bot was invited to remove him.
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/byebot.png" alt="byebot" width="auto" height="auto">
-<br />
-<br />
+</div>
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/byebotCPL.png" alt="byebotCPL" width="auto" height="auto">
-<br />
+</div>
 - type `/addlang [language]` in a public channel that Bot was invited with `2 digit ISO language code` to add language.
     - Example: `/addlang en` for add English to translate languages list.
     - Example: `/addlang ja` for add Japanese to translate languages list.
     - Example: `/addlang vi` for add Vietnamese to translate languages list.
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/addlang.png" alt="addlang" width="auto" height="auto">
-<br />
-<br />
+</div>
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/addlangCPL.png" alt="addlangCPL" width="auto" height="auto">
-<br />
+</div>
 - type `/byelang [language]` in a public channel that Bot was invited with `2 digit ISO language code` to remove language.
     - Example: `/byelang en` for remove English to translate languages list.
     - Example: `/byelang ja` for remove Japanese to translate languages list.
     - Example: `/byelang vi` for remove Vietnamese to translate languages list.
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/byelang.png" alt="byelang" width="auto" height="auto">
-<br />
-<br />
+</div>
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/byelangCPL.png" alt="byelangCPl" width="auto" height="auto">
-<br />
+</div>
 - type `/listlang` in a public channel that Bot was invited to show current languages list.
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/listlang.png" alt="listlang" width="auto" height="auto">
-<br />
-<br />
+</div>
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/listlangCPL.png" alt="listlangCPL" width="auto" height="auto">
-<br />
+</div>
 - type `/findlang` in a public channel that Bot was invited to show supported language list to translate.
-<br />
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/findlang.png" alt="findlang" width="auto" height="auto">
-<br />
-<br />
+</div>
+<div align="center">
     <img style="display: block; margin: 0 auto" src="docs/usage/findlangCPL.png" alt="findlangCPL" width="auto" height="auto">
-<br />
+</div>
 
 ### Installation
 
