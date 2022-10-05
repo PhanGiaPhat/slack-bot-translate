@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/PhanGiaPhat/slack-bot-translate">
-    <img src="docs/Witcher.jpg" alt="Logo" width="300" height="300">
+    <img style="display: block; margin: 0 auto" src="docs/Witcher.jpg" alt="Logo" width="300" height="300">
   </a>
 
   <h3 align="center">Slack Bot Translate</h3>
