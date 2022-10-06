@@ -204,7 +204,7 @@ app.use(async ({ payload , next }) => {
   })
 
   await Promise.all(channelList.channels?.map(async ({id}) => {
-    if (payload.channel_id == id) return next();
+    if (payload.channel_id == id || payload.channel == id) return next();
   }));
 })
   
