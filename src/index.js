@@ -1,12 +1,14 @@
+require("dotenv").config();
+
 const { App } = require("@slack/bolt");
 
 const translate = require('@vitalets/google-translate-api');
 
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-require("dotenv").config();
+const mongodb_url = process.env.MONGODB_URL;
 
-const mongodb_url = "mongodb://mongodb:27017/test";
+const langUtils = require('./utils/language');
 
 class Database {
     constructor() {
@@ -39,150 +41,6 @@ var recordSchema = mongoose.Schema({
 
 const Record = mongoose.model('record', recordSchema, 'record');
 
-var langs = {
-  'auto': 'Automatic',
-  'af': 'Afrikaans',
-  'sq': 'Albanian',
-  'am': 'Amharic',
-  'ar': 'Arabic',
-  'hy': 'Armenian',
-  'az': 'Azerbaijani',
-  'eu': 'Basque',
-  'be': 'Belarusian',
-  'bn': 'Bengali',
-  'bs': 'Bosnian',
-  'bg': 'Bulgarian',
-  'ca': 'Catalan',
-  'ceb': 'Cebuano',
-  'ny': 'Chichewa',
-  'zh-CN': 'Chinese (Simplified)',
-  'zh-TW': 'Chinese (Traditional)',
-  'co': 'Corsican',
-  'hr': 'Croatian',
-  'cs': 'Czech',
-  'da': 'Danish',
-  'nl': 'Dutch',
-  'en': 'English',
-  'eo': 'Esperanto',
-  'et': 'Estonian',
-  'tl': 'Filipino',
-  'fi': 'Finnish',
-  'fr': 'French',
-  'fy': 'Frisian',
-  'gl': 'Galician',
-  'ka': 'Georgian',
-  'de': 'German',
-  'el': 'Greek',
-  'gu': 'Gujarati',
-  'ht': 'Haitian Creole',
-  'ha': 'Hausa',
-  'haw': 'Hawaiian',
-  'he': 'Hebrew',
-  'iw': 'Hebrew',
-  'hi': 'Hindi',
-  'hmn': 'Hmong',
-  'hu': 'Hungarian',
-  'is': 'Icelandic',
-  'ig': 'Igbo',
-  'id': 'Indonesian',
-  'ga': 'Irish',
-  'it': 'Italian',
-  'ja': 'Japanese',
-  'jw': 'Javanese',
-  'kn': 'Kannada',
-  'kk': 'Kazakh',
-  'km': 'Khmer',
-  'ko': 'Korean',
-  'ku': 'Kurdish (Kurmanji)',
-  'ky': 'Kyrgyz',
-  'lo': 'Lao',
-  'la': 'Latin',
-  'lv': 'Latvian',
-  'lt': 'Lithuanian',
-  'lb': 'Luxembourgish',
-  'mk': 'Macedonian',
-  'mg': 'Malagasy',
-  'ms': 'Malay',
-  'ml': 'Malayalam',
-  'mt': 'Maltese',
-  'mi': 'Maori',
-  'mr': 'Marathi',
-  'mn': 'Mongolian',
-  'my': 'Myanmar (Burmese)',
-  'ne': 'Nepali',
-  'no': 'Norwegian',
-  'ps': 'Pashto',
-  'fa': 'Persian',
-  'pl': 'Polish',
-  'pt': 'Portuguese',
-  'pa': 'Punjabi',
-  'ro': 'Romanian',
-  'ru': 'Russian',
-  'sm': 'Samoan',
-  'gd': 'Scots Gaelic',
-  'sr': 'Serbian',
-  'st': 'Sesotho',
-  'sn': 'Shona',
-  'sd': 'Sindhi',
-  'si': 'Sinhala',
-  'sk': 'Slovak',
-  'sl': 'Slovenian',
-  'so': 'Somali',
-  'es': 'Spanish',
-  'su': 'Sundanese',
-  'sw': 'Swahili',
-  'sv': 'Swedish',
-  'tg': 'Tajik',
-  'ta': 'Tamil',
-  'te': 'Telugu',
-  'th': 'Thai',
-  'tr': 'Turkish',
-  'uk': 'Ukrainian',
-  'ur': 'Urdu',
-  'uz': 'Uzbek',
-  'vi': 'Vietnamese',
-  'cy': 'Welsh',
-  'xh': 'Xhosa',
-  'yi': 'Yiddish',
-  'yo': 'Yoruba',
-  'zu': 'Zulu'
-};
-
-function langToShow(langs) {
-  var result = "";
-  for (var key in langs) {
-    if (!langs.hasOwnProperty(key)) continue;
-
-    result += key+" <= "+langs[key]+"\n";
-  }
-  return result;
-}
-
-function getCode(desiredLang) {
-  if (!desiredLang) {
-      return false;
-  }
-
-  if (langs[desiredLang]) {
-      return desiredLang;
-  }
-
-  var keys = Object.keys(langs).filter(function (key) {
-      if (typeof langs[key] !== 'string') {
-          return false;
-      }
-
-      return langs[key].toLowerCase() === desiredLang.toLowerCase();
-  });
-
-  return keys[0] || false;
-}
-
-
-function isSupported(desiredLang) {
-  return Boolean(getCode(desiredLang));
-}
-
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -207,14 +65,6 @@ app.use(async ({ payload , next }) => {
     if (payload.channel_id == id || payload.channel == id) return next();
   }));
 })
-  
-var getLangList = function(arrLang) {
-  var result = "";
-  arrLang.map(async ({key}) => {
-    result += key+" ";
-  })
-  return result;
-}
 
 app.message(noBotMessages, async ({ client, message }) => {
   const clientText  = message.text.replace(/:\S*:|<\S*>/gim, "") || "";
@@ -320,7 +170,7 @@ app.command("/findlang", async({
     text: "Here's your all",
     attachments: [{
       "color": "#33ccee",
-      "text" : "```\n" + langToShow(langs) + "\n```",
+      "text" : "```\n" + langUtils.langToShow(langUtils.langs) + "\n```",
     }]
   })
 });
@@ -330,7 +180,7 @@ app.command("/addlang", async ({
   ack
 }) => {
   await ack()
-  if (isSupported(command.text)){
+  if (langUtils.isSupported(command.text)){
     Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $push: { language : {key : ""+command.text} } },
     function(err) {
       if (err) {
@@ -345,7 +195,7 @@ app.command("/addlang", async ({
         text: "Here's your all",
         attachments: [{
           "color": "#33ccee",
-          "text" : "Added language: "+command.text+"\n"+"Language list: "+getLangList(records.language),
+          "text" : "Added language: "+command.text+"\n"+"Language list: "+langUtils.getLangList(records.language),
         }]
     })
   } else {
@@ -366,7 +216,7 @@ app.command("/byelang", async ({
 }) => {
   await ack()
 
-  if (isSupported(command.text)){
+  if (langUtils.isSupported(command.text)){
     Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $pull: { language : {key : ""+command.text} } },
     function(err) {
       if (err) {
@@ -381,7 +231,7 @@ app.command("/byelang", async ({
       text: "Here's your all",
       attachments: [{
         "color": "#33ccee",
-        "text" : "Removed language: "+command.text+"\n"+"Language list: "+ getLangList(records.language),
+        "text" : "Removed language: "+command.text+"\n"+"Language list: "+ langUtils.getLangList(records.language),
       }]
     })
   } else {
@@ -396,8 +246,6 @@ app.command("/byelang", async ({
   }
 });
 
-  
-
 app.command("/listlang", async ({
   command,
   ack
@@ -411,7 +259,7 @@ app.command("/listlang", async ({
       text: "Here's your all",
       attachments: [{
         "color": "#33ccee",
-        "text" : "Language list: "+getLangList(records.language),
+        "text" : "Language list: "+langUtils.getLangList(records.language),
       }]
   })
 });

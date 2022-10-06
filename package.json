@@ -4,8 +4,8 @@
   "description": "A simple Slackbot translate all messages sent to channel",
   "main": "index.js",
   "scripts": {
-    "start" : "nodemon index.js",
-    "production": "pm2 start index.js --watch"
+    "start" : "nodemon src/index.js",
+    "production": "pm2 start src/index.js --watch"
   },
   "repository": {
     "type": "git",

@@ -14,6 +14,8 @@ ARG SLACK_SIGNING_SECRET
 
 ENV SLACK_SIGNING_SECRET=${SLACK_SIGNING_SECRET}
 
+ENV MONGODB_URL="mongodb://mongodb:27017/test"
+
 WORKDIR /usr/src/app
 
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
