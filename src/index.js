@@ -4,42 +4,13 @@ const { App } = require("@slack/bolt");
 
 const translate = require('@vitalets/google-translate-api');
 
-const mongoose = require('mongoose');
+const database =require('./database/connect')
 
-const mongodb_url = process.env.MONGODB_URL;
+const Model =require('./model/record')
+
+const db = new database();
 
 const langUtils = require('./utils/language');
-
-class Database {
-    constructor() {
-        this._connect()
-    }
-
-    _connect() {
-        mongoose.connect(mongodb_url, {useNewUrlParser: true})
-            .then(() => {
-                console.log("Database connection successfully!");
-            })
-            .catch(err => {
-                console.log("Database connection error!");
-            })
-    }
-}
-
-const Databse = new Database();
-
-var recordSchema = mongoose.Schema({
-    channel: {
-        type: String,
-        default: ''
-    },
-    language: {
-        type: Array,
-        default: ''
-    }
-});
-
-const Record = mongoose.model('record', recordSchema, 'record');
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -68,7 +39,7 @@ app.use(async ({ payload , next }) => {
 
 app.message(noBotMessages, async ({ client, message }) => {
   const clientText  = message.text.replace(/:\S*:|<\S*>/gim, "") || "";
-  const records = await Record.findOne({ channel: message?.channel });
+  const records = await Model.Record.findOne({ channel: message?.channel });
   const translatedTexts = await Promise.all(records.language?.map(async ({ key }) => {
     return (await translate(clientText, { to: key }))?.text;
   }));
@@ -89,7 +60,7 @@ app.command("/heybot", async ({
   ack
 }) => {
   await ack()
-  Record.countDocuments({channel: command.channel_id}, function (err, count){ 
+  Model.Record.countDocuments({channel: command.channel_id}, function (err, count){ 
     if(count>0){
       app.client.chat.postMessage({
         channel: command.channel_id,
@@ -100,7 +71,7 @@ app.command("/heybot", async ({
           }]
       })
     } else {
-      let newRecord = new Record({
+      let newRecord = new Model.Record({
         channel: command.channel_id,
         language: [
           {
@@ -132,9 +103,9 @@ app.command("/byebot", async ({
   ack
 }) => {
   await ack()
-  Record.countDocuments({channel: command.channel_id}, function (err, count){ 
+  Model.Record.countDocuments({channel: command.channel_id}, function (err, count){ 
     if(count>0){
-      Record.deleteMany({ channel: { $in: command.channel_id}}, function(err) {})
+      Model.Record.deleteMany({ channel: { $in: command.channel_id}}, function(err) {})
       app.client.chat.postMessage({
           channel: command.channel_id,
           text: "Here's your all",
@@ -181,14 +152,14 @@ app.command("/addlang", async ({
 }) => {
   await ack()
   if (langUtils.isSupported(command.text)){
-    Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $push: { language : {key : ""+command.text} } },
+    Model.Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $push: { language : {key : ""+command.text} } },
     function(err) {
       if (err) {
         console.log(err)
       }
     });
 
-    const records = await Record.findOne({channel : command.channel_id});
+    const records = await Model.Record.findOne({channel : command.channel_id});
 
     app.client.chat.postMessage({
         channel: command.channel_id,
@@ -217,14 +188,14 @@ app.command("/byelang", async ({
   await ack()
 
   if (langUtils.isSupported(command.text)){
-    Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $pull: { language : {key : ""+command.text} } },
+    Model.Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $pull: { language : {key : ""+command.text} } },
     function(err) {
       if (err) {
         console.log(err)
       }
     });
 
-    const records = await Record.findOne({channel : command.channel_id})
+    const records = await Model.Record.findOne({channel : command.channel_id})
     
     app.client.chat.postMessage({
       channel: command.channel_id,
@@ -252,7 +223,7 @@ app.command("/listlang", async ({
 }) => {
   await ack()
 
-  const records = await Record.findOne({channel : command.channel_id});
+  const records = await Model.Record.findOne({channel : command.channel_id});
 
   await app.client.chat.postMessage({
       channel: command.channel_id,
