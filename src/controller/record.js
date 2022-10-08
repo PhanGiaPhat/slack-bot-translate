@@ -7,20 +7,19 @@ const langUtils = require('../utils/language');
 const translate = require('@vitalets/google-translate-api');
 
 async function handleMessage(client, message){
-  const clientText  = message.text.replace(/:\S*:|<\S*>/gim, "") || "";
-  const records = await Model.Record.findOne({ channel: message?.channel });
-  const translatedTexts = await Promise.all(records.language?.map(async ({ key }) => {
-    return (await translate(clientText, { to: key }))?.text;
+  const translatedTexts = await Promise.all((await Model.Record.findOne({ channel: message?.channel })).language?.map(async ({ key }) => {
+    return (await translate(message.text.replace(/:\S*:|<\S*>/gim, ""), { to: key }))?.text;
   }));
-  const responseText = translatedTexts?.join("\n");
+
   const userInfo = await client.users.info({
     token: process.env.SLACK_BOT_TOKEN,
     user: message.user
   })
-  await client.chat.postMessage({
+
+  client.chat.postMessage({
     channel: message.channel,
-    text: responseText,
-    username: userInfo?.user?.profile?.display_name
+    text: translatedTexts?.join("\n"),
+    icon_url: userInfo?.user?.profile?.image_original,
   });
 }
 
