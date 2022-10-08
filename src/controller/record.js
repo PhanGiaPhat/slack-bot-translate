@@ -108,7 +108,7 @@ async function handleFindlang(client, command, ack) {
 async function handleAddlang(client, command, ack) {
     await ack()
     if (langUtils.isSupported(command.text)){
-      Model.Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $push: { language : {key : ""+command.text} } },
+      Model.Record.findOneAndUpdate({ channel: ""+command.channel_id}, { $addToSet: { language : {key : ""+command.text} } },
       function(err) {
         if (err) {
           console.log(err)
